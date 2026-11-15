@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HomeVolt – Smart Home Energy Monitor</title>
+<style>
+:root{--bg:#13161b;--card:#1f2022;--line:#3a3d42;--tx:#f1f3f5;--mut:#a9aeb5;--g:#1fbf8f;--gd:#0f3d33;--warn:#f2b84b;--in:#14161a;--hd:#1d2024;--c3:#17191c;--wb:#3d3010;--hero:linear-gradient(135deg,#0f3d33,#13161b 70%)}
+@media (prefers-color-scheme:light){:root{--bg:#f4f6f8;--card:#fff;--line:#d5d9de;--tx:#14181c;--mut:#5b636b;--g:#0b8a64;--gd:#d7f3ea;--warn:#8a5a00;--in:#fff;--hd:#fff;--c3:#f4f6f8;--wb:#fdf0d0;--hero:linear-gradient(135deg,#d7f3ea,#f4f6f8 70%)}}
+:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+.hero{background:var(--hero);border:1px solid var(--line);border-radius:24px;padding:44px 26px;margin-bottom:20px}
+.hero h2{font-size:2.5rem;line-height:1.15;margin:0 0 12px}.hero p{max-width:620px;color:var(--mut);font-size:1.1rem}
+.cta{background:var(--g);color:#052;border:0;border-radius:12px;padding:13px 22px;font-size:1rem;font-weight:700;cursor:pointer;margin:8px 10px 0 0}.cta.sec{background:none;color:var(--tx);border:1px solid var(--line)}
+.feat{cursor:pointer;text-align:left;color:var(--tx);font:inherit}.feat b{display:block;font-size:1.1rem;margin:6px 0}.feat span.k{display:block}
+footer{text-align:center;color:var(--mut);padding:20px 18px 40px;font-size:.9rem}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.5 system-ui,Roboto,sans-serif}
+header{padding:16px 18px 0;background:var(--hd);border-bottom:1px solid var(--line)}
+h1{margin:0 0 12px;font-size:1.45rem}h1 span{font-weight:400;font-size:1rem;color:var(--mut)}
+nav{display:flex;gap:10px;overflow-x:auto;padding-bottom:14px}
+nav button{white-space:nowrap;background:none;color:var(--tx);border:1px solid var(--line);border-radius:30px;padding:10px 18px;font-size:1rem;cursor:pointer}
+nav button.on{background:var(--gd);border-color:var(--g)}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--g);outline-offset:2px}
+main{max-width:960px;margin:0 auto;padding:22px 18px 60px}
+h2{font-size:1.9rem;margin:8px 0 20px}h3{margin:0 0 12px;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-bottom:16px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:16px}
+.grid .card{margin:0}
+.k{color:var(--mut);font-size:.95rem}.v{font-size:1.9rem;font-weight:700;margin-top:6px}.v small{font-size:1rem;font-weight:400;color:var(--mut)}
+.live{font-size:2.6rem}
+.bars{display:flex;gap:4px;align-items:flex-end;height:90px;margin-top:10px}
+.bars i{flex:1;background:var(--gd);border-radius:4px;transition:height .4s}
+.row{display:flex;align-items:center;gap:10px;margin:8px 0}
+.row .n{width:130px;flex:none;font-size:.9rem}.row .b{height:14px;background:var(--g);border-radius:4px}.row .x{font-size:.85rem;color:var(--mut)}
+table{width:100%;border-collapse:collapse;font-size:.92rem}
+th,td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--line)}th{color:var(--mut);font-weight:500}
+.scroll{overflow-x:auto}
+input[type=number],select{background:var(--in);color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:.95rem;width:90px}
+input[type=range]{width:100%;accent-color:var(--g)}
+label{display:block;margin:12px 0 4px}
+.save{color:var(--g);font-weight:700}.pill{display:inline-block;padding:2px 10px;border-radius:20px;background:var(--gd);color:var(--g);font-size:.85rem}
+.warn{background:var(--wb);color:var(--warn)}
+.tog{display:flex;gap:10px;align-items:center;margin:10px 0}.tog input{width:20px;height:20px;accent-color:var(--g)}
+.col3{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.col3 .card{background:var(--c3);margin:0}.col3 p{margin:6px 0;font-size:.9rem}
+section{display:none}section.on{display:block}
+@media print{header,.noprint{display:none}body{background:#fff;color:#000}.card{border-color:#999;background:#fff}}
+.pb{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}.pcol{background:var(--c3);border:1px solid var(--line);border-radius:12px;padding:10px;min-height:120px}.pcol h4{margin:0 0 6px;font-size:.95rem;display:flex;justify-content:space-between}
+.wi{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:10px;margin:8px 0;font-size:.9rem}.wi .id{color:var(--mut);font-size:.8rem}.wi .ac{display:flex;gap:6px;margin-top:8px}
+.wi button,.pa button{background:none;color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:4px 10px;cursor:pointer;font-size:.9rem}
+.prog{height:10px;background:var(--line);border-radius:6px;overflow:hidden;margin:8px 0}.prog i{display:block;height:100%;background:var(--g);transition:width .4s}
+.pa{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}.pa input[type=text]{flex:1;min-width:180px;width:auto;background:var(--in);color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:8px}.pa select{width:auto}
+</style>
+</head>
+<body>
+<header>
+<h1>🏠 HomeVolt <span>Smart Home Energy Monitor</span></h1>
+<nav id="nav"></nav>
+</header>
+<main>
+
+<section id="home">
+<div class="hero"><span class="pill">Made for Indian homes · ₹ · kWh · PM Surya Ghar</span>
+<h2 style="margin-top:14px">Know where every rupee of your electricity bill goes.</h2>
+<p>HomeVolt turns your appliance list into a live energy dashboard, a bill forecast, savings ideas and a rooftop-solar payback estimate. Everything runs in your browser and is saved on your device.</p>
+<button class="cta" onclick="show('dashboard')">Open dashboard</button><button class="cta sec" onclick="show('whatif')">Try the What-If simulator</button></div>
+<h3>Everything included</h3>
+<div class="grid">
+<button class="card feat" onclick="show('dashboard')"><span class="k">📊 Dashboard</span><b>Command center</b><span class="k">Projected bill, kWh, standby waste, efficiency grade, connected load, live load graph and room-wise energy.</span></button>
+<button class="card feat" onclick="show('equipment')"><span class="k">🔌 Appliances</span><b>Editable inventory</b><span class="k">Change quantity, watts, hours and standby watts. Every tab updates instantly.</span></button>
+<button class="card feat" onclick="show('whatif')"><span class="k">🧪 What-If</span><b>Savings simulator</b><span class="k">AC, LED, standby plugs, geyser timer and BLDC fans: see monthly and yearly savings.</span></button>
+<button class="card feat" onclick="show('solar')"><span class="k">☀️ Solar</span><b>Rooftop calculator</b><span class="k">Size and sun hours give generation, bill after solar, subsidy-adjusted cost and payback.</span></button>
+<button class="card feat" onclick="show('report')"><span class="k">🧾 Report</span><b>Monthly report</b><span class="k">Cost share per appliance, with one-click print or save as PDF.</span></button>
+<button class="card feat" onclick="show('settings')"><span class="k">⚙️ Settings</span><b>Your tariff</b><span class="k">Home name, billing days, fixed charge, taxes and four slab rates.</span></button>
+<button class="card feat" onclick="show('cicd')"><span class="k">🚀 CI/CD</span><b>Plane agile board</b><span class="k">Interactive Plane-style Kanban with cycle progress, plus the GitHub Actions pipeline.</span></button>
+</div>
+<div class="card"><h3>How it works</h3><p>1. Review the sample appliances or enter yours. 2. Set your tariff in Settings. 3. Explore savings and solar. 4. Print your report.</p></div>
+</section>
+
+<section id="dashboard">
+<h2>Home Energy Command Center</h2>
+<div class="grid">
+<div class="card"><div class="k">Projected monthly bill</div><div class="v" id="bill"></div></div>
+<div class="card"><div class="k">Consumption</div><div class="v" id="kwh"></div></div>
+<div class="card"><div class="k">Standby (always-on) waste</div><div class="v" id="sb"></div></div>
+<div class="card"><div class="k">Efficiency grade</div><div class="v" id="grade"></div></div>
+<div class="card"><div class="k">Connected load</div><div class="v" id="conn"></div></div>
+</div>
+<div class="card"><h3>Live load (simulated telemetry, 1.5 s)</h3><div class="v live" id="live"></div><div class="bars" id="bars"></div></div>
+<div class="card"><h3>Energy by room (kWh/month)</h3><div id="zones"></div></div>
+</section>
+
+<section id="equipment">
+<h2>Appliances</h2>
+<div class="card scroll"><table id="eqt"></table></div>
+<p class="k">Edit quantity, watts or hours/day – every tab updates instantly.</p>
+</section>
+
+<section id="whatif">
+<h2>What-If Simulator</h2>
+<div class="card">
+<div class="tog"><input type="checkbox" id="w1"><label for="w1" style="margin:0">Cut AC use by 2 hours a day (set to 26 °C)</label></div>
+<div class="tog"><input type="checkbox" id="w2"><label for="w2" style="margin:0">Swap all lights to 5 W LED</label></div>
+<div class="tog"><input type="checkbox" id="w3"><label for="w3" style="margin:0">Switch off standby devices at the plug</label></div>
+<div class="tog"><input type="checkbox" id="w4"><label for="w4" style="margin:0">Replace geyser with timer (halve run time)</label></div>
+<div class="tog"><input type="checkbox" id="w5"><label for="w5" style="margin:0">Replace fans with 28 W BLDC fans</label></div>
+<h3 style="margin-top:18px">Result</h3>
+<div class="v" id="wires"></div><p class="k" id="wisub"></p>
+</div>
+</section>
+
+<section id="solar">
+<h2>Rooftop Solar</h2>
+<div class="card">
+<label for="kw">System size: <b id="kwl"></b> kW</label>
+<input type="range" id="kw" min="1" max="10" step="0.5" value="3">
+<label for="psh">Peak sun hours per day: <b id="pshl"></b></label>
+<input type="range" id="psh" min="3" max="6.5" step="0.1" value="5">
+</div>
+<div class="grid">
+<div class="card"><div class="k">Generation</div><div class="v" id="sgen"></div></div>
+<div class="card"><div class="k">Bill after solar</div><div class="v" id="sbill"></div></div>
+<div class="card"><div class="k">Net cost after subsidy</div><div class="v" id="scost"></div></div>
+<div class="card"><div class="k">Payback</div><div class="v" id="spay"></div></div>
+</div>
+<p class="k">Assumes ₹55,000/kW and PM Surya Ghar subsidy (₹30,000/kW up to 2 kW, ₹18,000 for the 3rd kW). Check current rates with your DISCOM.</p>
+</section>
+
+<section id="report">
+<h2>Monthly Report</h2>
+<div class="card" id="rep"></div>
+<button class="noprint" onclick="window.print()" style="background:var(--g);color:#052;border:0;border-radius:10px;padding:12px 20px;font-size:1rem;font-weight:700;cursor:pointer">Print / save as PDF</button>
+</section>
+
+<section id="settings">
+<h2>Settings</h2>
+<div class="card">
+<label for="sname">Home name</label><input type="text" id="sname" style="background:var(--in);color:var(--tx);border:1px solid var(--line);border-radius:8px;padding:8px;width:100%">
+<label for="sdays">Days in billing month</label><input type="number" id="sdays" min="28" max="31">
+<label for="sfix">Fixed charge (₹/month)</label><input type="number" id="sfix" min="0">
+<label for="stax">Taxes &amp; duty (%)</label><input type="number" id="stax" min="0" max="30">
+<label for="shrs">Hours at home per day with TV/fans/lights usage</label><p class="k">Use the Appliances tab to set exact hours.</p>
+<h3 style="margin-top:16px">Tariff slabs (₹/kWh)</h3>
+<div class="scroll"><table><tr><th>Up to (kWh)</th><th>Rate</th></tr>
+<tr><td>100</td><td><input type="number" step="0.1" id="t0"></td></tr>
+<tr><td>200</td><td><input type="number" step="0.1" id="t1"></td></tr>
+<tr><td>400</td><td><input type="number" step="0.1" id="t2"></td></tr>
+<tr><td>Above 400</td><td><input type="number" step="0.1" id="t3"></td></tr></table></div>
+<p class="k">Slab rates are sample values – enter your electricity board's actual tariff.</p>
+</div>
+</section>
+
+<section id="cicd">
+<h2>Plane Agile Board &amp; CI/CD</h2>
+<div class="card"><h3>Pipeline (GitHub Actions)</h3>
+<p><span class="pill">✔ Lint HTML</span> → <span class="pill">✔ Build check</span> → <span class="pill">✔ Deploy to GitHub Pages</span></p>
+<p class="k">Every push to <b>main</b> runs <code>.github/workflows/ci.yml</code>.</p></div>
+<div class="card"><h3>Plane-style project: HomeVolt (HV)</h3>
+<p class="k" id="pcy"></p><div class="prog"><i id="ppr"></i></div>
+<div class="pb" id="pbd"></div>
+<div class="pa"><input type="text" id="pt" placeholder="New work item title" aria-label="New work item title"><select id="pp" aria-label="Priority"><option>Urgent</option><option>High</option><option selected>Medium</option><option>Low</option></select><button onclick="padd()">+ Add work item</button><button onclick="preset()">Reset demo</button></div>
+<p class="k">Demo of Plane’s core flow (work items, cycles, board states) running in your browser. It is not connected to a real Plane workspace. Use <a href="https://plane.so" target="_blank" rel="noopener" style="color:var(--g)">plane.so</a> for the real tool.</p></div>
+</section>
+
+</main>
+<footer>🏠 HomeVolt · Sample tariff and subsidy values: verify with your DISCOM. Data stays in your browser.</footer>
+<script>
+var S={name:"My Home",days:30,fix:120,tax:8,slabs:[4.5,6,8,9.5],
+eq:[
+{n:"Bedroom AC 1.5 T",r:"Bedroom",q:2,w:1400,h:5,s:2},
+{n:"Refrigerator",r:"Kitchen",q:1,w:150,h:9,s:0,always:1},
+{n:"Geyser",r:"Bathroom",q:2,w:2000,h:0.5,s:0},
+{n:"Washing machine",r:"Utility",q:1,w:500,h:1,s:3},
+{n:"Ceiling fan",r:"Living",q:6,w:75,h:9,s:0},
+{n:"LED / CFL lights",r:"Living",q:14,w:9,h:6,s:0},
+{n:"TV + set-top box",r:"Living",q:1,w:110,h:4,s:8},
+{n:"Wi-Fi router",r:"Living",q:1,w:12,h:24,s:0,always:1},
+{n:"Induction / mixer",r:"Kitchen",q:1,w:1800,h:1,s:1},
+{n:"Water pump",r:"Utility",q:1,w:750,h:0.6,s:0},
+{n:"Laptop + charger",r:"Study",q:2,w:60,h:6,s:3}
+]};
+try{var sv=localStorage.getItem("homevolt");if(sv)S=JSON.parse(sv)}catch(e){}
+function save(){try{localStorage.setItem("homevolt",JSON.stringify(S))}catch(e){}}
+var inr=function(x){return "₹"+x.toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})};
+var kfmt=function(x){return Math.round(x).toLocaleString("en-IN")};
+function energy(eq){var tot=0,sb=0,load=0,z={};
+eq.forEach(function(e){var a=e.q*e.w*e.h*S.days/1000;var s=e.always?0:e.q*e.s*(24-e.h)*S.days/1000;
+tot+=a+s;sb+=s;load+=e.q*e.w/1000;z[e.r]=(z[e.r]||0)+a+s});
+return{tot:tot,sb:sb,load:load,z:z}}
+function bill(k){var l=[100,200,400,1e9],p=0,c=0,amt=0;
+for(var i=0;i<4;i++){var u=Math.max(0,Math.min(k,l[i])-p);amt+=u*S.slabs[i];p=l[i]}
+return(amt+S.fix)*(1+S.tax/100)}
+function render(){var E=energy(S.eq),b=bill(E.tot),sbp=E.tot?E.sb/E.tot*100:0;
+set("bill",inr(b));set("kwh",kfmt(E.tot)+" kWh");
+set("sb",kfmt(E.sb)+" kWh · "+inr(b-bill(E.tot-E.sb))+"/mo");
+set("grade",(sbp<5?"A":sbp<8?"B":sbp<12?"C":"D")+" ("+sbp.toFixed(1)+"% standby)");
+set("conn",E.load.toFixed(1)+" kW");
+var z=document.getElementById("zones"),m=Math.max.apply(null,Object.values(E.z)),h="";
+Object.keys(E.z).sort(function(a,c){return E.z[c]-E.z[a]}).forEach(function(r){
+h+='<div class="row"><span class="n">'+r+'</span><span class="b" style="width:'+(E.z[r]/m*55)+'%"></span><span class="x">'+kfmt(E.z[r])+'</span></div>'});
+z.innerHTML=h;
+var t='<tr><th>Appliance</th><th>Qty</th><th>Watts</th><th>Hrs/day</th><th>Standby W</th><th>kWh/mo</th></tr>';
+S.eq.forEach(function(e,i){var k=e.q*e.w*e.h*S.days/1000+(e.always?0:e.q*e.s*(24-e.h)*S.days/1000);
+t+='<tr><td>'+e.n+'<br><span class="k">'+e.r+'</span></td>'+["q","w","h","s"].map(function(f){
+return'<td><input type="number" min="0" step="any" aria-label="'+e.n+' '+f+'" value="'+e[f]+'" onchange="ed('+i+',\''+f+'\',this.value)"></td>'}).join("")+'<td>'+k.toFixed(0)+'</td></tr>'});
+document.getElementById("eqt").innerHTML=t;
+whatif();solar();report()}
+function set(id,v){document.getElementById(id).textContent=v}
+function ed(i,f,v){S.eq[i][f]=Math.max(0,parseFloat(v)||0);save();render()}
+function clone(){return JSON.parse(JSON.stringify(S.eq))}
+function whatif(){var q=clone(),E0=energy(S.eq),c=function(id){return document.getElementById(id).checked};
+q.forEach(function(e){
+if(c("w1")&&/AC/.test(e.n))e.h=Math.max(0,e.h-2);
+if(c("w2")&&/lights/.test(e.n))e.w=5;
+if(c("w3"))e.s=0;
+if(c("w4")&&/Geyser/.test(e.n))e.h/=2;
+if(c("w5")&&/fan/.test(e.n))e.w=28});
+var E1=energy(q),sv=bill(E0.tot)-bill(E1.tot);
+set("wires","Save "+inr(sv)+"/month");
+set("wisub",kfmt(E0.tot-E1.tot)+" kWh less each month · "+inr(sv*12)+" a year")}
+["w1","w2","w3","w4","w5"].forEach(function(i){document.getElementById(i).onchange=whatif});
+function solar(){var kw=+document.getElementById("kw").value,p=+document.getElementById("psh").value;
+set("kwl",kw);set("pshl",p);var g=kw*p*S.days*0.8,E=energy(S.eq),b0=bill(E.tot),b1=bill(Math.max(0,E.tot-g));
+var sub=Math.min(kw,2)*30000+(kw>2?18000:0);if(kw>3)sub=78000;sub=Math.min(sub,78000);
+var cost=kw*55000-sub,sav=(b0-b1)*12;
+set("sgen",kfmt(g)+" kWh/mo");set("sbill",inr(b1));set("scost",inr(cost));
+set("spay",sav>0?(cost/sav).toFixed(1)+" years":"–")}
+document.getElementById("kw").oninput=solar;document.getElementById("psh").oninput=solar;
+function report(){var E=energy(S.eq),b=bill(E.tot),rows="";
+S.eq.slice().sort(function(a,c){return c.q*c.w*c.h-a.q*a.w*a.h}).forEach(function(e){
+var k=e.q*e.w*e.h*S.days/1000+(e.always?0:e.q*e.s*(24-e.h)*S.days/1000);
+rows+='<tr><td>'+e.n+'</td><td>'+k.toFixed(0)+' kWh</td><td>'+inr(k/E.tot*b)+'</td></tr>'});
+document.getElementById("rep").innerHTML='<h3>'+S.name+' – '+new Date().toLocaleString("en-IN",{month:"long",year:"numeric"})+'</h3>'+
+'<p>Total <b>'+kfmt(E.tot)+' kWh</b> · Bill <b>'+inr(b)+'</b> · Standby loss <b>'+kfmt(E.sb)+' kWh</b></p>'+
+'<div class="scroll"><table><tr><th>Appliance</th><th>Energy</th><th>Cost share</th></tr>'+rows+'</table></div>'}
+var tabs=[["home","Home"],["dashboard","Dashboard"],["equipment","Appliances"],["whatif","What-If"],["solar","Solar"],["report","Report"],["settings","Settings"],["cicd","Plane Agile"]];
+var nav=document.getElementById("nav");
+tabs.forEach(function(t,i){var b=document.createElement("button");b.textContent=t[1];b.onclick=function(){show(t[0])};b.id="b_"+t[0];nav.appendChild(b)});
+function show(id){window.scrollTo(0,0);tabs.forEach(function(t){document.getElementById(t[0]).classList.toggle("on",t[0]==id);document.getElementById("b_"+t[0]).classList.toggle("on",t[0]==id)})}
+show("home");
+var sm={sname:"name",sdays:"days",sfix:"fix",stax:"tax"};
+Object.keys(sm).forEach(function(id){var el=document.getElementById(id);el.value=S[sm[id]];
+el.onchange=function(){S[sm[id]]=id=="sname"?el.value:(parseFloat(el.value)||0);save();render()}});
+[0,1,2,3].forEach(function(i){var el=document.getElementById("t"+i);el.value=S.slabs[i];el.onchange=function(){S.slabs[i]=parseFloat(el.value)||0;save();render()}});
+var bars=document.getElementById("bars"),hist=[];
+for(var i=0;i<12;i++){bars.appendChild(document.createElement("i"));hist.push(0.5)}
+function tick(){var E=energy(S.eq),base=E.tot/(S.days*24),f=0.6+Math.random()*0.9;var kw=base*f*2.2;
+set("live",kw.toFixed(1)+" kW");hist.push(kw);hist.shift();var m=Math.max.apply(null,hist)||1;
+[].forEach.call(bars.children,function(el,i){el.style.height=(hist[i]/m*100)+"%"})}
+setInterval(tick,1500);render();tick();
+var COLS=[["backlog","Backlog"],["todo","Todo"],["doing","In Progress"],["done","Done"]];
+function seed(){return{n:11,c:[{id:1,t:"Dashboard",p:"High",s:"done"},{id:2,t:"Appliance editor",p:"Medium",s:"done"},{id:3,t:"What-If simulator",p:"High",s:"done"},{id:4,t:"CI pipeline",p:"Medium",s:"done"},{id:5,t:"Solar subsidy calculator",p:"High",s:"doing"},{id:6,t:"Real smart-plug API",p:"Urgent",s:"todo"},{id:7,t:"Monthly email report",p:"Medium",s:"todo"},{id:8,t:"Hindi and Kannada language support",p:"Low",s:"backlog"},{id:9,t:"Export report to CSV",p:"Low",s:"backlog"},{id:10,t:"Time-of-day tariff support",p:"Medium",s:"backlog"}]}}
+var P=null;try{P=JSON.parse(localStorage.getItem("hv_plane"))}catch(e){}
+if(!P||!P.c)P=seed();
+function psave(){try{localStorage.setItem("hv_plane",JSON.stringify(P))}catch(e){}}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function pmv(id,d){var c=P.c.filter(function(x){return x.id==id})[0],i=COLS.map(function(k){return k[0]}).indexOf(c.s)+d;if(i<0||i>3)return;c.s=COLS[i][0];psave();plane()}
+function pdel(id){P.c=P.c.filter(function(x){return x.id!=id});psave();plane()}
+function padd(){var t=document.getElementById("pt"),v=t.value.trim();if(!v)return;P.c.push({id:P.n++,t:v,p:document.getElementById("pp").value,s:"backlog"});t.value="";psave();plane()}
+function preset(){P=seed();psave();plane()}
+function plane(){var d=P.c.filter(function(x){return x.s=="done"}).length,t=P.c.length,pc=t?Math.round(d/t*100):0;
+document.getElementById("pcy").textContent="Cycle 1 · 10–24 Nov 2026 · "+d+" of "+t+" work items done ("+pc+"%)";
+document.getElementById("ppr").style.width=pc+"%";
+document.getElementById("pbd").innerHTML=COLS.map(function(k,ci){var items=P.c.filter(function(x){return x.s==k[0]});
+return'<div class="pcol"><h4>'+k[1]+'<span class="k">'+items.length+'</span></h4>'+items.map(function(x){
+return'<div class="wi"><div class="id">HV-'+x.id+'</div>'+esc(x.t)+'<div style="margin-top:6px"><span class="pill'+(x.p=="Urgent"||x.p=="High"?" warn":"")+'">'+x.p+'</span></div><div class="ac">'+(ci>0?'<button aria-label="Move HV-'+x.id+' back" onclick="pmv('+x.id+',-1)">←</button>':'')+(ci<3?'<button aria-label="Move HV-'+x.id+' forward" onclick="pmv('+x.id+',1)">→</button>':'')+'<button aria-label="Delete HV-'+x.id+'" onclick="pdel('+x.id+')">✕</button></div></div>'}).join("")+'</div>'}).join("")}
+document.getElementById("pt").onkeydown=function(e){if(e.key=="Enter")padd()};
+plane();
+</script>
+</body>
+</html>
